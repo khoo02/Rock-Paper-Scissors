@@ -33,8 +33,10 @@ function addText(text) {
 }
 
 // counters for playRound function
-let humanScore = 0;
-let computerScore = 0;
+let scores = {
+  humanScore: 0,
+  computerScore: 0
+}
 
 // play one round
 // void function that iterates points based on round
@@ -62,74 +64,78 @@ function playRound(userPrompt) {
   if (humanChoice == computerChoice) {
 
     addText("Tie!");
-    humanScore++;
-    computerScore++;
+    scores.humanScore++;
+    scores.computerScore++;
 
   }
   if (humanChoice == "rock" && computerChoice == "paper") {
 
     addText("Rock loses to Paper!");
-    computerScore++;
+    scores.computerScore++;
 
   }
   if (humanChoice == "paper" && computerChoice == "rock") {
     
     addText("Paper beats Rock!");
-    humanScore++;
+    scores.humanScore++;
 
   }
   if (humanChoice == "rock" && computerChoice == "scissors") {
 
     addText("Rock beats Scissors!");
-    humanScore++;
+    scores.humanScore++;
 
   }
   if (humanChoice == "scissors" && computerChoice == "rock") {
     
     addText("Scissors loses to Rock!");
-    computerScore++;
+    scores.computerScore++;
 
   }
   if (humanChoice == "scissors" && computerChoice == "paper") {
 
     addText("Scissors beats Paper!");
-    humanScore++;
+    scores.humanScore++;
 
   }
   if (humanChoice == "paper" && computerChoice == "scissors") {
 
     addText("Paper loses to Scissors!");
-    computerScore++;
+    scores.computerScore++;
 
   }
   
   // scores
-  addText("Your score: " + humanScore);
-  addText("Computer score: " + computerScore);
+  addText("Your score: " + scores.humanScore);
+  addText("Computer score: " + scores.computerScore);
 
   // check if game finished, and declare winner
-  checkWinner(humanScore, computerScore);
+  checkWinner();
   
 }
 
 // helper function to check end of game
 // returns msg to declare winner
-function checkWinner(humanScore, computerScore) {
+function checkWinner() {
 
   // check if one player has reached 5 points
-  if ((humanScore == 5) || computerScore == 5) {
+  if ((scores.humanScore == 5) || scores.computerScore == 5) {
 
     // declare winner
-    if (humanScore == computerScore) {
+    if (scores.humanScore == scores.computerScore) {
       addText("You tied!");
     }
-    else if (humanScore > computerScore) {
+    else if (scores.humanScore > scores.computerScore) {
       addText("You win!");
     }
-    else {
+    else { // if human score < scores.computerScore
       addText("You lose!");
     }
 
+    // reset score once winner declared
+    scores.humanScore = 0;
+    scores.computerScore = 0;
+    
   }
 
 }
@@ -139,8 +145,8 @@ function checkWinner(humanScore, computerScore) {
 function playGame() {
 
   // reset score
-  humanScore = 0;
-  computerScore = 0;
+  scores.humanScore = 0;
+  scores.computerScore = 0;
 
   // intro
   alert("Rock, Paper or Scissors:");
