@@ -112,6 +112,7 @@ function playRound(userPrompt) {
   // check if game finished, and declare winner
   checkWinner();
   
+  
 }
 
 // helper function to check end of game
@@ -135,7 +136,7 @@ function checkWinner() {
     // reset score once winner declared
     scores.humanScore = 0;
     scores.computerScore = 0;
-    
+
   }
 
 }
