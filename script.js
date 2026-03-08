@@ -1,169 +1,113 @@
-// variable for result div
+// DOM references for the results div and scoreboard display elements
 const result = document.querySelector("#results");
+const humanScoreEl = document.querySelector("#humanScore");
+const computerScoreEl = document.querySelector("#computerScore");
 
-// computer choice
-// returns random selection: rock, paper, scissors
+// Step 2: Get the computer choice
+// Randomly returns one of "rock", "paper", or "scissors"
+// Math.random() returns a number >= 0 and < 1, multiplied by 3 and floored
+// to give an index of 0, 1, or 2 into the choices array
 function getComputerChoice() {
-  // generate random number
-  let randomNumber = Math.floor(Math.random() * 3 + 1);
-
-  // determine rock paper scissors
-  switch (randomNumber) {
-    case 1:
-      return "rock";
-    case 2:
-      return "paper";
-    case 3:
-      return "scissors";
-  }
+  const choices = ["rock", "paper", "scissors"];
+  return choices[Math.floor(Math.random() * 3)];
 }
 
-// function to add text using DOM methods
-function addText(text) {
-
-  // create paragraph element
+// Helper: creates a <p> element with the given text and optional CSS class,
+// then appends it to the results div
+function addText(text, className = "") {
   const p = document.createElement("p");
-
-  // use input as text content
   p.textContent = text;
-
-  // append element to div
+  if (className) p.className = className;
   result.appendChild(p);
-
 }
 
-// counters for playRound function
-let scores = {
-  humanScore: 0,
-  computerScore: 0
+// Step 4: Score variables declared in the global scope and initialized to 0
+// Stored as an object so both values travel together
+let scores = { humanScore: 0, computerScore: 0 };
+
+// Helper: syncs the score object values to the scoreboard elements in the DOM
+function updateScoreboard() {
+  humanScoreEl.textContent = scores.humanScore;
+  computerScoreEl.textContent = scores.computerScore;
 }
 
-// play one round
-// void function that iterates points based on round
-function playRound(userPrompt) {
-
-  // clear text
+// Step 5: Play a single round
+// Takes the human's choice as an argument, gets a computer choice,
+// logs the result to the page, and increments the correct score
+function playRound(humanChoice) {
+  // Clear previous round's output
   result.textContent = "";
 
-  // initialize choices in the beginning of round
-  const humanChoice = userPrompt;
+  // Get a fresh computer choice each round
   const computerChoice = getComputerChoice();
 
-  // intro
-  addText("Rock Paper Scissors!");
+  // Show both choices
+  addText("Round result", "result-intro");
+  addText("You chose: " + humanChoice);
+  addText("Computer chose: " + computerChoice);
 
-  // human choice
-  // result.textContent = "Your choice: " + humanChoice;
-  addText("Your choice: " + humanChoice);
-
-  // computer choice
-  // result.textContent = "Computer choice: " + computerChoice;
-  addText("Computer choice: " + computerChoice);
-  
-  // game mechanics
-  if (humanChoice == computerChoice) {
-
-    addText("Tie!");
+  // Game logic: compare choices and update scores
+  if (humanChoice === computerChoice) {
+    // Tie — both players score a point
+    addText("Tie!", "result-tie");
     scores.humanScore++;
     scores.computerScore++;
-
-  }
-  if (humanChoice == "rock" && computerChoice == "paper") {
-
-    addText("Rock loses to Paper!");
-    scores.computerScore++;
-
-  }
-  if (humanChoice == "paper" && computerChoice == "rock") {
-    
-    addText("Paper beats Rock!");
+  } else if (
+    (humanChoice === "rock"     && computerChoice === "scissors") ||
+    (humanChoice === "scissors" && computerChoice === "paper")   ||
+    (humanChoice === "paper"    && computerChoice === "rock")
+  ) {
+    // Human wins this round
+    const msgs = {
+      rock:     "Rock beats Scissors!",
+      scissors: "Scissors beats Paper!",
+      paper:    "Paper beats Rock!"
+    };
+    addText(msgs[humanChoice], "result-win");
     scores.humanScore++;
-
-  }
-  if (humanChoice == "rock" && computerChoice == "scissors") {
-
-    addText("Rock beats Scissors!");
-    scores.humanScore++;
-
-  }
-  if (humanChoice == "scissors" && computerChoice == "rock") {
-    
-    addText("Scissors loses to Rock!");
+  } else {
+    // Computer wins this round
+    const msgs = {
+      rock:     "Paper beats your Rock!",
+      scissors: "Rock beats your Scissors!",
+      paper:    "Scissors beat your Paper!"
+    };
+    addText(msgs[humanChoice], "result-lose");
     scores.computerScore++;
-
   }
-  if (humanChoice == "scissors" && computerChoice == "paper") {
 
-    addText("Scissors beats Paper!");
-    scores.humanScore++;
-
-  }
-  if (humanChoice == "paper" && computerChoice == "scissors") {
-
-    addText("Paper loses to Scissors!");
-    scores.computerScore++;
-
-  }
-  
-  // scores
-  addText("Your score: " + scores.humanScore);
-  addText("Computer score: " + scores.computerScore);
-
-  // check if game finished, and declare winner
+  // Reflect updated scores in the scoreboard, then check if game is over
+  updateScoreboard();
   checkWinner();
-  
-  
 }
 
-// helper function to check end of game
-// returns msg to declare winner
+// Helper: checks if either player has reached 5 points
+// If so, declares a winner and resets scores for a new game
 function checkWinner() {
-
-  // check if one player has reached 5 points
-  if ((scores.humanScore == 5) || scores.computerScore == 5) {
-
-    // declare winner
-    if (scores.humanScore == scores.computerScore) {
-      addText("You tied!");
-    }
-    else if (scores.humanScore > scores.computerScore) {
-      addText("You win!");
-    }
-    else { // if human score < scores.computerScore
-      addText("You lose!");
+  if (scores.humanScore >= 5 || scores.computerScore >= 5) {
+    if (scores.humanScore === scores.computerScore) {
+      addText("It's a draw!", "result-tie");
+    } else if (scores.humanScore > scores.computerScore) {
+      addText("You win the game!", "result-win");
+    } else {
+      addText("Computer wins the game!", "result-lose");
     }
 
-    // reset score once winner declared
+    // Reset scores so the next click starts a fresh game
     scores.humanScore = 0;
     scores.computerScore = 0;
-
+    updateScoreboard();
   }
-
 }
 
-// play game
-// void function that runs game until a player reaches 5 points
+// Step 6: Play the game
+// Attaches click event listeners to the three buttons so each click
+// plays one round with the corresponding human choice
 function playGame() {
-
-  // reset score
-  scores.humanScore = 0;
-  scores.computerScore = 0;
-
-  // intro
-  alert("Rock, Paper or Scissors:");
-  
-  // DOM variables for buttons
-  const rock = document.querySelector("#rockBtn");
-  const paper = document.querySelector("#paperBtn");
-  const scissors = document.querySelector("#scissorsBtn");
-  
-  // event listener that calls playRound with click
-  rock.addEventListener("click", () => {playRound("rock")});
-  paper.addEventListener("click", () => {playRound("paper")});
-  scissors.addEventListener("click", () => {playRound("scissors")});
-
-  // 
-
+  document.querySelector("#rockBtn").addEventListener("click",     () => playRound("rock"));
+  document.querySelector("#paperBtn").addEventListener("click",    () => playRound("paper"));
+  document.querySelector("#scissorsBtn").addEventListener("click", () => playRound("scissors"));
 }
 
+// Wait for the DOM to fully load before running playGame
 document.addEventListener("DOMContentLoaded", playGame);
