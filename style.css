@@ -1,0 +1,174 @@
+/* Variables */
+:root {
+  --vanilla:    #FDF3DC; /* warm yellow-white, used for page background and rock button */
+  --choco:      #5C3317; /* dark brown, used for borders, text, and headings */
+  --choco-mid:  #8B5E3C; /* medium brown, used for secondary text and labels */
+  --strawberry: #E8768A; /* pink, used for accents and lose state */
+  --straw-light:#FADADD; /* light pink, used for scoreboard background and paper button */
+  --cream:      #FFF8F0; /* off-white, used for the card background */
+  --text-dark:  #3B1F0E; /* near-black brown, used for body text */
+}
+
+/* Global reset: normalize box sizing and remove default margin/padding */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Center the card vertically and horizontally on the page */
+body {
+  background-color: var(--vanilla);
+  font-family: 'Nunito', sans-serif;
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* Main game container card */
+.card {
+  background: var(--cream);
+  border: 2px solid var(--choco);
+  border-radius: 16px;
+  padding: 2.5rem;
+  max-width: 380px;
+  width: 100%;
+}
+
+/* Game title */
+.title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.8rem;
+  color: var(--choco);
+  text-align: center;
+  margin-bottom: 0.2rem;
+}
+
+/* "First to 5 wins" subtitle beneath the title */
+.subtitle {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--choco-mid);
+  margin-bottom: 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Scoreboard */
+
+/* Row containing both player scores and the "vs" divider */
+.scoreboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--straw-light);
+  border-radius: 10px;
+  padding: 0.8rem 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* Individual score column (label + number) */
+.score-block {
+  text-align: center;
+}
+
+/* Small uppercase label ("You" / "Computer") */
+.score-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--choco-mid);
+  margin-bottom: 0.2rem;
+}
+
+/* Large score number */
+.score-num {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2rem;
+  color: var(--choco);
+  line-height: 1;
+}
+
+/* "vs" text between the two scores */
+.score-divider {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.2rem;
+  color: var(--strawberry);
+}
+
+/* Choice buttons (Rock / Paper / Scissors) */
+
+/* Flex row that holds the three choice buttons side by side */
+.btn-row {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.75rem;
+}
+
+/* Shared styles for all three choice buttons */
+.choice-btn {
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  border: 2px solid var(--choco);
+  border-radius: 10px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: filter 0.15s; /* smooth brightness change on hover/active */
+  color: var(--choco);
+}
+
+/* Each button gets its own ice cream flavor background color */
+#rockBtn     { background: var(--vanilla); }     /* vanilla */
+#paperBtn    { background: var(--straw-light); } /* strawberry */
+#scissorsBtn { background: #EAD5C4; }            /* chocolate (light) */
+
+/* Subtle darkening on hover and a stronger press effect on click */
+.choice-btn:hover  { filter: brightness(0.95); }
+.choice-btn:active { filter: brightness(0.88); }
+
+/* Results */
+
+/* Container for round result paragraphs, separated from buttons by a top border */
+#results {
+  min-height: 60px;
+  border-top: 1px solid #D9C5B2;
+  padding-top: 1rem;
+}
+
+/* Default style for each result line */
+#results p {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  padding: 0.2rem 0;
+}
+
+/* "Round result" heading line at the top of each round's output */
+#results p.result-intro {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1rem;
+  color: var(--choco-mid);
+  margin-bottom: 0.3rem;
+}
+
+/* Win outcome: green text */
+#results p.result-win  { color: #2E7D32; font-family: 'Fredoka One', cursive; font-size: 1.1rem; }
+
+/* Lose outcome: strawberry pink text */
+#results p.result-lose { color: var(--strawberry); font-family: 'Fredoka One', cursive; font-size: 1.1rem; }
+
+/* Tie outcome: mid-brown text */
+#results p.result-tie  { color: var(--choco-mid); font-family: 'Fredoka One', cursive; font-size: 1.1rem; }
+
+/* Placeholder shown before the first move is made */
+.waiting {
+  color: var(--choco-mid);
+  font-size: 0.85rem;
+  font-style: italic;
+}
